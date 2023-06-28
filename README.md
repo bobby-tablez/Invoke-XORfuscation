@@ -1,5 +1,5 @@
 # Invoke-XORfuscation
-Generate obfuscated PowerShell commands using XOR logic with random keys! Each variable as well as the XOR key is randomly generated. The resulting code is a PowerShell one-liner which contains a small function to deobfuscate the provided command and XORfuscated code appened afterwards.
+Generate obfuscated PowerShell commands using XOR logic with random keys. Each variable as well as the XOR key is randomly generated. The resulting code is a PowerShell one-liner which contains a small function to deobfuscate the provided command and XORfuscated code appened afterwards.
 
 Each time the scrript runs new function names will be created, however, when prompted and "S" is sllected, it will use the same function names with random variables. This is handy for XORfuscating multi-line files. 
 
