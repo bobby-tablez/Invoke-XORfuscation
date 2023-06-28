@@ -21,7 +21,7 @@ Write-Host ""
 Write-Host  -NoNewline " == " -ForegroundColor red
 
 foreach ($char in $mfctd.ToCharArray()) {
-    Write-Host -NoNewline $char -ForegroundColor yellow
+    Write-Host -NoNewline $char -ForegroundColor magenta
     Start-Sleep -Milliseconds (Get-Random -Minimum 1 -Maximum 4)
 }
 Write-Host "`n"
@@ -51,7 +51,14 @@ function enXor ($asciiString, $static) {
        $hexStream += '0x' + '{0:X}' -f ($byteStream[$i] -bxor $xorKey)
     } 
     
-    return "$aF$aU$aN$aC$aT$aI$aO$aN " + $randF + '(${' + $randB + '},${' + $randX + "}){$aF$aO$aR($" + $randS + '=0;$' + $randS + " -$aL$aT `${" + $randB + "}.$aC$aO$aU$aN$aT;`$" + $randS + '++){${' + $randB + '}[$' + $randS + ']=(${' + $randB + '}[$' + $randS + "]-$aB$aX$aO$aR`${" + $randX + "})}$aR$aE$aT$aU$aR$aN [$aS$aY$aS$aT$aE$aM.$aT$aE$aX$aT.$aE$aN$aC$aO$aD$aI$aN$aG]::$aA$aS$aC$aI$aI.$aG$aE$aT$aS$aT$aR$aI$aN$aG(`${" + $randB + '})};' + '${' + $randEnc + '}=(&' + $randF + "([$aS$aY$aS$aT$aE$aM.$aB$aY$aT$aE[]]@(" + (($hexStream) -join",") +"))" + $xorKey + ');&' + (Get-Random -InputObject $invokes) + '(${' + $randEnc + '})'
+    if ($static  -eq "0") {
+        $finFun = "$aF$aU$aN$aC$aT$aI$aO$aN " + $randF + '(${' + $randB + '},${' + $randX + "}){$aF$aO$aR($" + $randS + '=0;$' + $randS + " -$aL$aT `${" + $randB + "}.$aC$aO$aU$aN$aT;`$" + $randS + '++){${' + $randB + '}[$' + $randS + ']=(${' + $randB + '}[$' + $randS + "]-$aB$aX$aO$aR`${" + $randX + "})}$aR$aE$aT$aU$aR$aN [$aS$aY$aS$aT$aE$aM.$aT$aE$aX$aT.$aE$aN$aC$aO$aD$aI$aN$aG]::$aA$aS$aC$aI$aI.$aG$aE$aT$aS$aT$aR$aI$aN$aG(`${" + $randB + '})};'
+    }
+    $finCmd = '${' + $randEnc + '}=(&' + $randF + "([$aS$aY$aS$aT$aE$aM.$aB$aY$aT$aE[]]@(" + (($hexStream) -join",") +"))" + $xorKey + ');&' + (Get-Random -InputObject $invokes) + '(${' + $randEnc + '})'
+    
+    $finFin = $finFun + $finCmd
+
+    return $finFin
 }
 
 Do{
@@ -75,7 +82,7 @@ Do{
                 $input = Read-Host -Prompt 'Provide command to XORfuscate'
                 $result = &enXor $input $sta
 
-                Write-Host -f Yellow $result
+                Write-Host -f DarkYellow $result
                 Write-Host ""
 
                 $restart = Read-host "Do you want to XORfuscate another? (Y/N), or another under the same function? (S)"            
