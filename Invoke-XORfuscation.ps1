@@ -50,14 +50,8 @@ function enXor ($asciiString, $static) {
     for ($i = 0; $i -lt $byteStream.count; $i++) {
        $hexStream += '0x' + '{0:X}' -f ($byteStream[$i] -bxor $xorKey)
     } 
-
-    if ($static  -eq "0") {
-        return "$aF$aU$aN$aC$aT$aI$aO$aN " + $randF + '(${' + $randB + '},${' + $randX + "}){$aF$aO$aR($" + $randS + '=0;$' + $randS + " -$aL$aT `${" + $randB + "}.$aC$aO$aU$aN$aT;`$" + $randS + '++){${' + $randB + '}[$' + $randS + ']=(${' + $randB + '}[$' + $randS + "]-$aB$aX$aO$aR`${" + $randX + "})}$aR$aE$aT$aU$aR$aN [$aS$aY$aS$aT$aE$aM.$aT$aE$aX$aT.$aE$aN$aC$aO$aD$aI$aN$aG]::$aA$aS$aC$aI$aI.$aG$aE$aT$aS$aT$aR$aI$aN$aG(`${" + $randB + '})};' + '${' + $randEnc + '}=(&' + $randF + "([$aS$aY$aS$aT$aE$aM.$aB$aY$aT$aE[]]@(" + (($hexStream) -join",") +"))" + $xorKey + ');&' + (Get-Random -InputObject $invokes) + '(${' + $randEnc + '})'
-    }
-    else {
-       Set-Variable -Name statF -Value $global:randF
-       return "$aF$aU$aN$aC$aT$aI$aO$aN " + $statF + '(${' + $randB + '},${' + $randX + "}){$aF$aO$aR($" + $randS + '=0;$' + $randS + " -$aL$aT `${" + $randB + "}.$aC$aO$aU$aN$aT;`$" + $randS + '++){${' + $randB + '}[$' + $randS + ']=(${' + $randB + '}[$' + $randS + "]-$aB$aX$aO$aR`${" + $randX + "})}$aR$aE$aT$aU$aR$aN [$aS$aY$aS$aT$aE$aM.$aT$aE$aX$aT.$aE$aN$aC$aO$aD$aI$aN$aG]::$aA$aS$aC$aI$aI.$aG$aE$aT$aS$aT$aR$aI$aN$aG(`${" + $randB + '})};' + '${' + $randEnc + '}=(&' + $statF + "([$aS$aY$aS$aT$aE$aM.$aB$aY$aT$aE[]]@(" + (($hexStream) -join",") +"))" + $xorKey + ');&' + (Get-Random -InputObject $invokes) + '(${' + $randEnc + '})'
-    } 
+    
+    return "$aF$aU$aN$aC$aT$aI$aO$aN " + $randF + '(${' + $randB + '},${' + $randX + "}){$aF$aO$aR($" + $randS + '=0;$' + $randS + " -$aL$aT `${" + $randB + "}.$aC$aO$aU$aN$aT;`$" + $randS + '++){${' + $randB + '}[$' + $randS + ']=(${' + $randB + '}[$' + $randS + "]-$aB$aX$aO$aR`${" + $randX + "})}$aR$aE$aT$aU$aR$aN [$aS$aY$aS$aT$aE$aM.$aT$aE$aX$aT.$aE$aN$aC$aO$aD$aI$aN$aG]::$aA$aS$aC$aI$aI.$aG$aE$aT$aS$aT$aR$aI$aN$aG(`${" + $randB + '})};' + '${' + $randEnc + '}=(&' + $randF + "([$aS$aY$aS$aT$aE$aM.$aB$aY$aT$aE[]]@(" + (($hexStream) -join",") +"))" + $xorKey + ');&' + (Get-Random -InputObject $invokes) + '(${' + $randEnc + '})'
 }
 
 Do{
