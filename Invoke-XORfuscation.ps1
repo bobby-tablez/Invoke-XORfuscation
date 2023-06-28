@@ -26,7 +26,6 @@ foreach ($char in $mfctd.ToCharArray()) {
 }
 Write-Host "`n"
 
-$ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop
 
 $global:randF = 0
 
@@ -43,8 +42,8 @@ function enXor ($asciiString, $static) {
     if ($static  -eq "0") {
         $global:randF = -join ((65..90) + (97..122) | Get-Random -Count 3 | % {[char]$_})
     }
-    $randS = -join ((65..90) + (97..122) | Get-Random -Count 1 | % {[char]$_})
-    
+
+    $randS = -join ((65..90) + (97..122) | Get-Random -Count 1 | % {[char]$_})   
     $invokes = @("($aG$aA``$aL ?[?$aE]$aX)","($aG$aA$aL ?[?$aE]$aX)","($aG$aC$aM ?[?$aE]$aX)","($aG$aC$aM ?[?$aE]$aX)","($aG$aA$aL ?$aE[?$aX])","($aG$aC$aM ?$aE[?$aX])","(``$aG$aA``$aL $aI?[?$aX])","($aG``$aC$aM $aI?[?$aX])")
     
     for ($i = 0; $i -lt $byteStream.count; $i++) {
@@ -54,41 +53,77 @@ function enXor ($asciiString, $static) {
     if ($static  -eq "0") {
         $finFun = "$aF$aU$aN$aC$aT$aI$aO$aN " + $randF + '(${' + $randB + '},${' + $randX + "}){$aF$aO$aR($" + $randS + '=0;$' + $randS + " -$aL$aT `${" + $randB + "}.$aC$aO$aU$aN$aT;`$" + $randS + '++){${' + $randB + '}[$' + $randS + ']=(${' + $randB + '}[$' + $randS + "]-$aB$aX$aO$aR`${" + $randX + "})}$aR$aE$aT$aU$aR$aN [$aS$aY$aS$aT$aE$aM.$aT$aE$aX$aT.$aE$aN$aC$aO$aD$aI$aN$aG]::$aA$aS$aC$aI$aI.$aG$aE$aT$aS$aT$aR$aI$aN$aG(`${" + $randB + '})};'
     }
+
     $finCmd = '${' + $randEnc + '}=(&' + $randF + "([$aS$aY$aS$aT$aE$aM.$aB$aY$aT$aE[]]@(" + (($hexStream) -join",") +"))" + $xorKey + ');&' + (Get-Random -InputObject $invokes) + '(${' + $randEnc + '})'
-    
     $finFin = $finFun + $finCmd
 
     return $finFin
 }
 
-Do{
+Function processFile ($filePath) {
+    $fileContent = Get-Content $filePath
+    $varArray = @()
     $sta = "0"
-    $input = Read-Host -Prompt 'Provide command to XORfuscate'
-    $result = &enXor $input $sta
 
-    Write-Host -f Yellow $result
-    Write-Host ""
-
-    Do{
-        $restart = Read-host "Do you want to XORfuscate another? (Y/N), or another under the same function? (S)"
-        If(($restart -eq "Y") -or ($restart -eq "N") -or ($restart -eq "S")){
-            $ver = $true}
-        Else{
-            write-host -fg Red "Invalid input. (Y/N/S)?"
-    }
-    While ($restart -eq "S"){
-        if ($restart -eq "S") {
-                $sta = "1"
-                $input = Read-Host -Prompt 'Provide command to XORfuscate'
-                $result = &enXor $input $sta
-
-                Write-Host -f DarkYellow $result
-                Write-Host ""
-
-                $restart = Read-host "Do you want to XORfuscate another? (Y/N), or another under the same function? (S)"            
-            }
+    for($i = 0; $i -lt $fileContent.Count; $i++) {
+        if ([string]::IsNullOrWhiteSpace($fileContent[$i])) {
+            continue
         }
-    }Until($ver)
+        $varArray += ,(&enXor $fileContent[$i] $sta)
+        $sta = "1"
+    }
+
+    return $varArray
+}
+
+
+Do{
+    $start = Read-Host "XORfuscate file or command? [F/C]"
+    If ($start -eq "C"){
+        Do{
+            $sta = "0"
+            $input = Read-Host -Prompt 'Provide command to XORfuscate'
+            $result = &enXor $input $sta
+
+            Write-Host -ForegroundColor Yellow $result
+            Write-Host ""
+
+            Do{
+                $restart = Read-host "Do you want to XORfuscate another? [Y/N], or another under the same function? (S)"
+                If(($restart -eq "Y") -or ($restart -eq "N") -or ($restart -eq "S")){
+                    While ($restart -eq "S"){
+                        $sta = "1"
+                        $input = Read-Host -Prompt 'Provide command to XORfuscate'
+                        $result = &enXor $input $sta
+
+                        Write-Host -f DarkYellow $result
+                        Write-Host ""
+
+                        $restart = Read-host "Another under the last generated function? [Back: ENTER] [Another: S]"
+                    }
+                    $ver = $true
+                }
+                Else{
+                    Write-Host -ForegroundColor Red "Invalid input. [Y/N/S]?"
+                }
+        
+            }Until($ver)
+        }Until($restart -eq "N")
+    }
+    If ($start -eq "F"){
+        $filePath = Read-Host -Prompt 'File to XORfuscate'
+        $varArray = ProcessFile $filePath
+
+        Write-Host ""
+        Write-Host -ForegroundColor Yellow "`$ErrorActionPreference = 'SilentlyContinue'"
+        foreach ($var in $varArray) {
+            Write-Host -ForegroundColor Yellow $var
+        }
+        Write-Host ""
+    }
+    Else{
+        Write-Host -ForegroundColor Red "Invalid input. [F/C]?"
+    }
 }Until($restart -eq "N")
 
 Write-Host "Bye!"
