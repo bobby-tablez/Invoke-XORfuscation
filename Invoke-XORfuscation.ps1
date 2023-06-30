@@ -89,7 +89,7 @@ Do{
             Write-Host ""
 
             Do{
-                $restart = Read-host "Do you want to XORfuscate another? [Y/N], or another under the same function? (S)"
+                $restart = Read-host "Do you want to XORfuscate another? [Y/N], or another under the same function? [S]"
                 If(($restart -eq "Y") -or ($restart -eq "N") -or ($restart -eq "S")){
                     While ($restart -eq "S"){
                         $sta = "1"
