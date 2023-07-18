@@ -44,7 +44,7 @@ function enXor ($asciiString, $static) {
     }
 
     $randS = -join ((65..90) + (97..122) | Get-Random -Count 1 | % {[char]$_})   
-    $invokes = @("($aG$aA``$aL ?[?$aE]$aX)","($aG$aA$aL ?[?$aE]$aX)","($aG$aC$aM ?[?$aE]$aX)","($aG$aC$aM ?[?$aE]$aX)","($aG$aA$aL ?$aE[?$aX])","($aG$aC$aM ?$aE[?$aX])","(``$aG$aA``$aL $aI?[?$aX])","($aG``$aC$aM $aI?[?$aX])")
+    $invokes = @("($aG$aA``$aL ?[?$aE]$aX)","($aG``$aA$aL ?[?$aE]$aX)","($aG$aC``$aM ?[?$aE]$aX)","($aG``$aC$aM ?[?$aE]$aX)","($aG$aA``$aL ?$aE[?$aX])","($aG``$aC$aM ?$aE[?$aX])","(``$aG$aA``$aL $aI`?[?$aX])","($aG``$aC$aM $aI`?[?$aX])")
     
     for ($i = 0; $i -lt $byteStream.count; $i++) {
        $hexStream += '0x' + '{0:X}' -f ($byteStream[$i] -bxor $xorKey)
@@ -89,7 +89,7 @@ Do{
             Write-Host ""
 
             Do{
-                $restart = Read-host "Do you want to XORfuscate another? [Y/N], or another under the same function? [S]"
+                $restart = Read-host "Do you want to XORfuscate another? [Y/N], or another under the same function? (S)"
                 If(($restart -eq "Y") -or ($restart -eq "N") -or ($restart -eq "S")){
                     While ($restart -eq "S"){
                         $sta = "1"
