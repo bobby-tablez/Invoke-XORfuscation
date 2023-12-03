@@ -1,11 +1,11 @@
 # Invoke-XORfuscation
 ![header image](https://raw.githubusercontent.com/bobby-tablez/Invoke-XORfuscation/main/banner.png?raw=true) 
 
-Generate obfuscated PowerShell commands using XOR logic with random keys. Each variable as well as the XOR key is randomly generated. The resulting code is a PowerShell one-liner which contains a small function to deobfuscate the provided command and XORfuscated code appened afterwards.
+Generate obfuscated PowerShell commands using XOR logic with random keys. Each variable as well as the XOR key is randomly generated. The resulting code is a PowerShell one-liner (or entire script) which contains a small function to deobfuscate the provided command or scriptblock.
 
 In Command mode (C switch): Each time the scrript runs new function names will be created. When "S" is sllected after the first command generation, it will XORfuscate additional provided code using the last generated function. This is handy when multiple XORfuscated commands exist within the same scriptblock which will use only one function. 
 
-In File mode (F switch): the script will read the contents of the file and will XORfuscate each line of the file and provide the obfuscated version of the file. This is experimental and may not produce expected results, especially in the case of long command lines within the file. 
+In File mode (F switch): the script will read the contents of the file and will XORfuscate each line of the file and provide the obfuscated version of the file as output. Using this method, a single deobfuscation function is created and used to handle each obfuscated line of code. 
 
 Example command: `whoami`:
 ```powershell
