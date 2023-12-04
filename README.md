@@ -8,7 +8,7 @@ In Command mode (C switch): Each time the scrript runs new function names will b
 In File mode (F switch): the script will read the contents of the file and will XORfuscate each line of the file and provide the obfuscated version of the file as output. Using this method, a single deobfuscation function is created and used to handle each obfuscated line of code. 
 
 ## Example:
-![Example_image](https://raw.githubusercontent.com/bobby-tablez/Invoke-XORfuscation/main/Invoke_XORfuscation_Example.png) 
+![Example_Image](https://raw.githubusercontent.com/bobby-tablez/Invoke-XORfuscation/main/Invoke_XORfuscation_Example.png) 
 
 Example command: `whoami`:
 ```powershell
