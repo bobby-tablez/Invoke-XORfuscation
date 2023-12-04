@@ -14,8 +14,8 @@ fuNctIoN ksu(${cv},${wm}){for($d=0;$d -lt ${cv}.couNt;$d++){${cv}[$d]=(${cv}[$d]
 When prompted, specify a command to invoke. The script will continue obfuscating provided commands (Y/S) until (N) is provided.
 
 ## AV Bypass: AMSI
-In this example a known AMSI bypass was used: [Same as 6 but integer Bytes instead of Base64
-]([https://pages.github.com/](https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell#same-as-6-but-integer-bytes-instead-of-base64)https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell#same-as-6-but-integer-bytes-instead-of-base64)
+In this example a known AMSI bypass was used: 
+[Same as 6 but integer Bytes instead of Base64](https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell#same-as-6-but-integer-bytes-instead-of-base64)
 
 When the code is placed into a .ps1 file (amsi.ps1) it is detected by Windows Defender (Dec. 2023). Running the code through Invoke-XORfucation (amsi_xorfuscated.ps1) allows it to execute thus bypassing Defender.
 ![XOR-AMSI-Bypass](https://raw.githubusercontent.com/bobby-tablez/Invoke-XORfuscation/main/Invoke_XORfuscation_AMSI_Bypass.png)
