@@ -9,7 +9,7 @@
     https://raw.githubusercontent.com/bobby-tablez/Invoke-XORfuscation/main/Invoke-XORfuscation.ps1
 #>
 
-# Banner
+# Banner generation
 $plain = "whoami" 
 $mfctd = '"FunCTIOn puf(${tQ},${NM}){FOR($N=0;$N -LT ${tQ}.COunT;$N++){${tQ}[$N]=(${tQ}[$N]-bxOR${NM})}ReTuRn [sysTem.TexT.enCOdIng]::asCII.geTsTRIng(${tQ})};${qWgv}=(&puf([sysTem.byTe[]]@(0x80,0x9F,0x98,0x96,0x9A,0x9E))247);&(g`Cm [?x])(${qWgv})"'
 
@@ -29,16 +29,20 @@ Write-Host "`n"
 
 $global:randF = 0
 
+# Build XORfucation strings
 function enXor ($asciiString, $static) {
     $xorKey = Get-Random -Minimum 1 -Maximum 255
     $byteStream = [System.Text.Encoding]::ASCII.GetBytes($asciiString)
     $hexStream = @()
 
+    # Random case generation. It's messy but works...
     $aA = @("a","A") | Get-Random;$aB = @("b","B") | Get-Random;$aC = @("c","C") | Get-Random;$aD = @("d","D") | Get-Random;$aE = @("e","E") | Get-Random;$aF = @("f","F") | Get-Random;$aG = @("g","G") | Get-Random;$aH = @("h","H") | Get-Random;$aI = @("i","I") | Get-Random;$aJ = @("j","J") | Get-Random;$aK = @("k","K") | Get-Random;$aL = @("l","L") | Get-Random;$aM = @("m","M") | Get-Random;$aN = @("n","N") | Get-Random;$aO = @("o","O") | Get-Random;$aP = @("p","P") | Get-Random;$aQ = @("q","Q") | Get-Random;$aR = @("r","R") | Get-Random;$aS = @("s","S") | Get-Random;$aT = @("t","T") | Get-Random;$aU = @("u","U") | Get-Random;$aV = @("v","V") | Get-Random;$aW = @("w","W") | Get-Random;$aX = @("x","X") | Get-Random;$aY = @("y","Y") | Get-Random;$aZ = @("z","Z") | Get-Random
     
+    # Generate random variables and invokes
     $randEnc = -join ((65..90) + (97..122) | Get-Random -Count 4 | % {[char]$_})
     $randX = -join ((65..90) + (97..122) | Get-Random -Count 2 | % {[char]$_})
     $randB = -join ((65..90) + (97..122) | Get-Random -Count 2 | % {[char]$_})
+
     if ($static  -eq "0") {
         $global:randF = -join ((65..90) + (97..122) | Get-Random -Count 3 | % {[char]$_})
     }
@@ -50,6 +54,7 @@ function enXor ($asciiString, $static) {
        $hexStream += '0x' + '{0:X}' -f ($byteStream[$i] -bxor $xorKey)
     } 
     
+    # Build strings (new function)
     if ($static  -eq "0") {
         $finFun = "$aF$aU$aN$aC$aT$aI$aO$aN " + $randF + '(${' + $randB + '},${' + $randX + "}){$aF$aO$aR($" + $randS + '=0;$' + $randS + " -$aL$aT `${" + $randB + "}.$aC$aO$aU$aN$aT;`$" + $randS + '++){${' + $randB + '}[$' + $randS + ']=(${' + $randB + '}[$' + $randS + "]-$aB$aX$aO$aR`${" + $randX + "})}$aR$aE$aT$aU$aR$aN [$aS$aY$aS$aT$aE$aM.$aT$aE$aX$aT.$aE$aN$aC$aO$aD$aI$aN$aG]::$aA$aS$aC$aI$aI.$aG$aE$aT$aS$aT$aR$aI$aN$aG(`${" + $randB + '})};'
     }
@@ -60,6 +65,7 @@ function enXor ($asciiString, $static) {
     return $finFin
 }
 
+# Read in file
 Function processFile ($filePath) {
     $fileContent = Get-Content $filePath
     $varArray = @()
@@ -77,42 +83,42 @@ Function processFile ($filePath) {
 }
 
 
+# Build menu structure
 Do{
-    $start = Read-Host "XORfuscate file or command? [F/C]"
+    $start = Read-Host "XORfuscate file or command? [F = File, C = Command, Q = Quit]"
     If ($start -eq "C"){
         Do{
             $sta = "0"
-            $input = Read-Host -Prompt 'Provide command to XORfuscate'
+            $input = Read-Host -Prompt 'Provide command to XORfuscate (new function)'
             $result = &enXor $input $sta
 
             Write-Host -ForegroundColor Yellow $result
             Write-Host ""
 
-            Do{
-                $restart = Read-host "Do you want to XORfuscate another? [Y/N], or another under the same function? (S)"
-                If(($restart -eq "Y") -or ($restart -eq "N") -or ($restart -eq "S")){
-                    While ($restart -eq "S"){
-                        $sta = "1"
-                        $input = Read-Host -Prompt 'Provide command to XORfuscate'
-                        $result = &enXor $input $sta
+            $restartSame = Read-host "Do you want to XORfuscate another command? [Y/N], or another under the same function? (S)"
+            While ($restartSame -eq "S"){
+                $sta = "1" # Used to signal function generation on/off
+                $input = Read-Host -Prompt 'Provide command to XORfuscate (same function)'
+                $result = &enXor $input $sta
 
-                        Write-Host -f DarkYellow $result
-                        Write-Host ""
+                Write-Host -f DarkYellow $result
+                Write-Host ""
 
-                        $restart = Read-host "Another under the last generated function? [Back: ENTER] [Another: S]"
-                    }
-                    $ver = $true
-                }
-                Else{
-                    Write-Host -ForegroundColor Red "Invalid input. [Y/N/S]?"
-                }
+                $restartSame = Read-host "Another under the last generated function? [Back: B] [Another: S]"
+            }
         
-            }Until($ver)
-        }Until($restart -eq "N")
+
+        }Until(($restartSame -eq "N") -or ($restartSame -eq "B"))
     }
     If ($start -eq "F"){
-        $filePath = Read-Host -Prompt 'File to XORfuscate'
-        $varArray = ProcessFile $filePath
+        Try{
+            $filePath = Read-Host -Prompt 'File to XORfuscate'
+            $varArray = ProcessFile $filePath
+        }
+        Catch{
+            Write-Host "Error: $($_.Exception.Message)"
+            exit 1
+        }
 
         Write-Host ""
         Write-Host -ForegroundColor Yellow "`$ErrorActionPreference = 'SilentlyContinue'"
@@ -121,9 +127,12 @@ Do{
         }
         Write-Host ""
     }
-    Else{
-        Write-Host -ForegroundColor Red "Invalid input. [F/C]?"
+    If (($start -eq "F") -or ($restartSame -eq "N") -or ($restartSame -eq "B")){
+        # Do Nothing
     }
-}Until($restart -eq "N")
+    Else{
+        Write-Host -ForegroundColor Red "Invalid input. [F/C/Q]?"
+    }
+}Until($start -eq "Q")
 
-Write-Host "Bye!"
+Write-Host -ForegroundColor "Green" "Bye!"
