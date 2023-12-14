@@ -66,7 +66,7 @@ function enXor ($asciiString, $static) {
 }
 
 # Read in file
-Function processFile ($filePath) {
+Function ProcessFile ($filePath) {
     $fileContent = Get-Content $filePath
     $varArray = @()
     $sta = "0"
@@ -85,7 +85,10 @@ Function processFile ($filePath) {
 
 # Build menu structure
 Do{
+    # Main menu
     $start = Read-Host "XORfuscate file or command? [F = File, C = Command, Q = Quit]"
+    
+    # Command options
     If ($start -eq "C"){
         Do{
             $sta = "0"
@@ -96,6 +99,8 @@ Do{
             Write-Host ""
 
             $restartSame = Read-host "Do you want to XORfuscate another command? [Y/N], or another under the same function? (S)"
+            
+            # Keep outputting commands under the same function name
             While ($restartSame -eq "S"){
                 $sta = "1" # Used to signal function generation on/off
                 $input = Read-Host -Prompt 'Provide command to XORfuscate (same function)'
@@ -110,22 +115,33 @@ Do{
 
         }Until(($restartSame -eq "N") -or ($restartSame -eq "B"))
     }
+
+    # File options
     If ($start -eq "F"){
-        Try{
-            $filePath = Read-Host -Prompt 'File to XORfuscate'
+        
+        $filePath = Read-Host -Prompt 'File to XORfuscate'
+            
+        If (Test-Path -Path $filePath) {
+            
+            # Build obfuscated $erroractionpreference = "SilentlyContinue"
+            $plus = @('''+''','')
+            $tick = @('`','')
+            $SilentVar = "`${e" + (Get-Random $tick) + "R" + (Get-Random $tick) + "R" + (Get-Random $tick) + "O" + (Get-Random $tick) + "Rac" + (Get-Random $tick) + "Ti" + (Get-Random $tick) + "O" + (Get-Random $tick) + "Np" + (Get-Random $tick) + "R" + (Get-Random $tick) + "E" + (Get-Random $tick) + "F" + (Get-Random $tick) + "E" + (Get-Random $tick) + "R" + (Get-Random $tick) + "e" + (Get-Random $tick) + "Nc" + (Get-Random $tick) + "e}='S" + (Get-Random $plus) + "i" + (Get-Random $plus) + "l" + (Get-Random $plus) + "e" + (Get-Random $plus) + "n" + (Get-Random $plus) + "t" + (Get-Random $plus) + "l" + (Get-Random $plus) + "y" + (Get-Random $plus) + "C" + (Get-Random $plus) + "o" + (Get-Random $plus) + "n" + (Get-Random $plus) + "t" + (Get-Random $plus) + "i" + (Get-Random $plus) + "n" + (Get-Random $plus) + "u" + (Get-Random $plus) + "e'"
+
+            Write-Host ""
+            Write-Host -ForegroundColor Yellow $SilentVar
+            
+            # Buld each line of the input script
             $varArray = ProcessFile $filePath
-        }
-        Catch{
-            Write-Host "Error: $($_.Exception.Message)"
-            exit 1
+            foreach ($var in $varArray) {
+                Write-Host -ForegroundColor Yellow $var
+            }
+            Write-Host ""
+        } 
+        Else{
+            Write-Host -ForegroundColor Red "File not found at $filePath"
         }
 
-        Write-Host ""
-        Write-Host -ForegroundColor Yellow "`$ErrorActionPreference = 'SilentlyContinue'"
-        foreach ($var in $varArray) {
-            Write-Host -ForegroundColor Yellow $var
-        }
-        Write-Host ""
     }
     If (($start -eq "F") -or ($restartSame -eq "N") -or ($restartSame -eq "B")){
         # Do Nothing
