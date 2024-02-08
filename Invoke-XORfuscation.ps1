@@ -48,7 +48,7 @@ function enXor ($asciiString, $static) {
     }
 
     $randS = -join ((65..90) + (97..122) | Get-Random -Count 1 | % {[char]$_})   
-    $invokes = @("($aG$aA``$aL ?[?$aE]$aX)","($aG``$aA$aL ?[?$aE]$aX)","($aG$aC``$aM ?[?$aE]$aX)","($aG``$aC$aM ?[?$aE]$aX)","($aG$aA``$aL ?$aE[?$aX])","($aG``$aC$aM ?$aE[?$aX])","(``$aG$aA``$aL $aI`?[?$aX])","($aG``$aC$aM $aI`?[?$aX])")
+    $invokes = @("($aG$aA``$aL ?[?$aE]$aX)","($aG$aC``$aM ?[?$aE]$aX)","($aG``$aC$aM ?[?$aE]$aX)","($aG$aA``$aL ?$aE[?$aX])","($aG``$aC$aM ?$aE[?$aX])","(``$aG$aA``$aL $aI`?[?$aX])","($aG``$aC$aM $aI`?[?$aX])")
     
     for ($i = 0; $i -lt $byteStream.count; $i++) {
        $hexStream += '0x' + '{0:X}' -f ($byteStream[$i] -bxor $xorKey)
@@ -65,8 +65,19 @@ function enXor ($asciiString, $static) {
     return $finFin
 }
 
-# Read in file
+# Build obfuscated/randomized version of: $erroractionpreference = "SilentlyContinue"
+Function SuppressErrors {
+    $plus = @('''+''','')
+    $tick = @('`','')
+    $SilentVar = "`${e" + (Get-Random $tick) + "R" + (Get-Random $tick) + "R" + (Get-Random $tick) + "O" + (Get-Random $tick) + "Rac" + (Get-Random $tick) + "Ti" + (Get-Random $tick) + "O" + (Get-Random $tick) + "Np" + (Get-Random $tick) + "R" + (Get-Random $tick) + "E" + (Get-Random $tick) + "F" + (Get-Random $tick) + "E" + (Get-Random $tick) + "R" + (Get-Random $tick) + "e" + (Get-Random $tick) + "Nc" + (Get-Random $tick) + "e}='S" + (Get-Random $plus) + "i" + (Get-Random $plus) + "l" + (Get-Random $plus) + "e" + (Get-Random $plus) + "n" + (Get-Random $plus) + "t" + (Get-Random $plus) + "l" + (Get-Random $plus) + "y" + (Get-Random $plus) + "C" + (Get-Random $plus) + "o" + (Get-Random $plus) + "n" + (Get-Random $plus) + "t" + (Get-Random $plus) + "i" + (Get-Random $plus) + "n" + (Get-Random $plus) + "u" + (Get-Random $plus) + "e'"
+    
+    return $SilentVar
+}
+
+# Read in file and process it
+
 Function ProcessFile ($filePath) {
+
     $fileContent = Get-Content $filePath
     $varArray = @()
     $sta = "0"
@@ -79,7 +90,28 @@ Function ProcessFile ($filePath) {
         $sta = "1"
     }
 
-    return $varArray
+    # Check if file has more than 100 lines
+    if ($fileContent.Count -gt 100) {
+
+        # File construction/definitions
+        $fileDirectory = [System.IO.Path]::GetDirectoryName($filePath)
+        $fileName = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
+        $fileExtension = [System.IO.Path]::GetExtension($filePath)
+        $newFilePath = Join-Path $fileDirectory "$fileName`_XOR$fileExtension"
+
+        # Prepend ErrorAction function to varArray
+        $varArray = @(SuppressErrors) + $varArray
+
+        # Save processed content to newly created file
+        $varArray | Out-File -FilePath $newFilePath -Encoding UTF8
+
+        return "File saved as $newFilePath"
+
+    } else {
+        
+        Write-Host -ForegroundColor Yellow @(SuppressErrors)
+        return $varArray
+    }
 }
 
 
@@ -123,25 +155,19 @@ Do{
             
         If (Test-Path -Path $filePath) {
             
-            # Build obfuscated $erroractionpreference = "SilentlyContinue"
-            $plus = @('''+''','')
-            $tick = @('`','')
-            $SilentVar = "`${e" + (Get-Random $tick) + "R" + (Get-Random $tick) + "R" + (Get-Random $tick) + "O" + (Get-Random $tick) + "Rac" + (Get-Random $tick) + "Ti" + (Get-Random $tick) + "O" + (Get-Random $tick) + "Np" + (Get-Random $tick) + "R" + (Get-Random $tick) + "E" + (Get-Random $tick) + "F" + (Get-Random $tick) + "E" + (Get-Random $tick) + "R" + (Get-Random $tick) + "e" + (Get-Random $tick) + "Nc" + (Get-Random $tick) + "e}='S" + (Get-Random $plus) + "i" + (Get-Random $plus) + "l" + (Get-Random $plus) + "e" + (Get-Random $plus) + "n" + (Get-Random $plus) + "t" + (Get-Random $plus) + "l" + (Get-Random $plus) + "y" + (Get-Random $plus) + "C" + (Get-Random $plus) + "o" + (Get-Random $plus) + "n" + (Get-Random $plus) + "t" + (Get-Random $plus) + "i" + (Get-Random $plus) + "n" + (Get-Random $plus) + "u" + (Get-Random $plus) + "e'"
-
             Write-Host ""
-            Write-Host -ForegroundColor Yellow $SilentVar
+
+            $result = ProcessFile $filePath
             
-            # Buld each line of the input script
-            $varArray = ProcessFile $filePath
-            foreach ($var in $varArray) {
+            foreach ($var in $result) {
                 Write-Host -ForegroundColor Yellow $var
             }
             Write-Host ""
-        } 
-        Else{
+            
+        } else {
             Write-Host -ForegroundColor Red "File not found at $filePath"
         }
-
+        
     }
     If (($start -eq "F") -or ($restartSame -eq "N") -or ($restartSame -eq "B")){
         # Do Nothing
