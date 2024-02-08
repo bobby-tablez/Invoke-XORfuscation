@@ -7,6 +7,8 @@ In Command mode (C switch): Each time the scrript runs new function names will b
 
 In File mode (F switch): the script will read the contents of the file and will XORfuscate each line of the file and provide the obfuscated version of the file as output. Using this method, a single deobfuscation function is created and used to handle each obfuscated line of code. 
 
+When file is more than 100 lines rather than outputting the contents, it is saved to the same directory as [filename]_XOR.[ext]
+
 ## Example:
 ![Example_Image](https://raw.githubusercontent.com/bobby-tablez/Invoke-XORfuscation/main/media/Invoke_XORfuscation_Example.png) 
 
