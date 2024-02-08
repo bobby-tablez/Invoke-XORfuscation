@@ -7,7 +7,7 @@ In Command mode (C switch): Each time the scrript runs new function names will b
 
 In File mode (F switch): the script will read the contents of the file and will XORfuscate each line of the file and provide the obfuscated version of the file as output. Using this method, a single deobfuscation function is created and used to handle each obfuscated line of code. 
 
-When file is more than 100 lines rather than outputting the contents, it is saved to the same directory as [filename]_XOR.[ext]
+When file is more than 100 lines rather than outputting the contents, it is saved to the same specified directory as [filename]_XOR.[ext]
 
 ## Example:
 ![Example_Image](https://raw.githubusercontent.com/bobby-tablez/Invoke-XORfuscation/main/media/Invoke_XORfuscation_Example.png) 
@@ -21,7 +21,7 @@ When prompted, specify a command to invoke. The script will continue obfuscating
 ## AV Bypass: AMSI
 In this example a known AMSI bypass was used: [Amsi-Bypass-Powershell by S3cur3Th1sSh1t](https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell)
 
-When the code is placed into a .ps1 file (amsi.ps1) it is detected by Windows Defender (Dec. 2023). Running the code through Invoke-XORfucation (amsi_xorfuscated.ps1) allows it to execute thus bypassing Defender.
+When the code is placed into a .ps1 file (amsi.ps1) it is detected by Windows Defender (Feb. 2024). Running the code through Invoke-XORfucation (amsi_xorfuscated.ps1) allows it to execute thus bypassing Defender.
 ![XOR-AMSI-Bypass](https://raw.githubusercontent.com/bobby-tablez/Invoke-XORfuscation/main/media/Invoke_XORfuscation_AMSI_Bypass.png)
 
 
